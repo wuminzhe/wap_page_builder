@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>builder</title>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+  <link rel="stylesheet" href="./stylesheets/style.css">
+  <link rel="stylesheet" href="./stylesheets/spectrum.css">
+  
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  
+  <script src="http://underscorejs.org/underscore-min.js" type="text/javascript"></script>
+  <script src='./javascripts/libs/spectrum.js'></script>
+  
+  <script src="./javascripts/libs/dragSlider.js" type="text/javascript"></script>
+  <script src="./javascripts/tool.js" type="text/javascript"></script>
+  <script src="./javascripts/Paper.js" type="text/javascript"></script>
+  <script src="./javascripts/Block.js" type="text/javascript"></script>
+  <script src="./javascripts/TitleBar.js" type="text/javascript"></script>
+  <script src="./javascripts/Paragraph.js" type="text/javascript"></script>
+  <script src="./javascripts/ImageParagraph.js" type="text/javascript"></script>
+  <script src="./javascripts/Gutter.js" type="text/javascript"></script>
+  <script src="./javascripts/Picture.js" type="text/javascript"></script>
+  <script src="./javascripts/InfoBar.js" type="text/javascript"></script>
+  <script src="./javascripts/ImageSlider.js" type="text/javascript"></script>
+  <script src="./javascripts/Suggestion.js" type="text/javascript"></script>
+  <script>
+  
+  $(document).ready(function(){
+    var paper = new Paper();
+    
+    var tb0 = paper.addTitleBar("日本同意搁置争议");
+    paper.addInfoBar("江苏省人民政府");
+    paper.addParagraph("中国大陆驻美大使崔天凯也在《外交》杂志指出，中方在美国于1972年将钓鱼岛连同冲绳移交给日本时即明确宣示反对，中方对钓鱼岛主权立场毫无疑问始终如一。崔天凯表示，中方了解这项争议需要时间解决，不急一夜间间找出方案。");
+    paper.addImageSlider(["./images/img1.jpg", "./images/img2.jpg", "./images/img3.jpg"]);
+    paper.addImageParagraph("中国大陆驻美大使崔天凯也在外交杂志指出，中方在美国于1972年将钓鱼岛连同冲绳移交给日本时即明确宣示反对，中方对钓鱼岛主权立场毫无疑问始终如一。崔天凯表示，中方了解这项争议需要时间解决，不急一夜间间找出方案。中国大陆驻美大使崔天凯也在《外交》杂志指出，中方在美国于1972年将钓鱼岛连同冲绳移交给日本时即明确宣示反对，中方对钓鱼岛主权立场毫无疑问始终如一。崔天凯表示，中方了解这项争议需要时间解决，不急一夜间间找出方案。", "./images/girl.jpg", "right");
+    paper.addParagraph("中国外交部发言人华春莹曾表示，<a href=#>钓鱼岛</a>问题涉及中国领土主权，中国坚决维护国家核心利益。");
+    paper.addImageParagraph("日本首相安倍晋三近日在接受美国《外交》杂志专访就钓鱼岛(日称“尖阁诸岛”)议题指出，日本从未同意“搁置钓鱼岛议题”的说法。日本首相安倍晋三近日在接受美国《外交》杂志专访就钓鱼岛(日称“尖阁诸岛”)议题指出，日本从未同意“搁置钓鱼岛议题”的说法。日本首相安倍晋三近日在接受美国《外交》杂志专访就钓鱼岛(日称“尖阁诸岛”)议题指出，日本从未同意“搁置钓鱼岛议题”的说法。日本首相安倍晋三近日在接受美国《外交》杂志专访就钓鱼岛(日称“尖阁诸岛”)议题指出，日本从未同意“搁置钓鱼岛议题”的说法。", "./images/girl.jpg", "left");
+    paper.addPicture("./images/img.jpg");
+    
+    paper.addGutter();
+    paper.addSuggestion();
+    
+    paper.render();
+  
+    Block.prototype.clicked = function(p) {
+      $(".pop").css("top", p.el.offset().top-15);
+      $(".pop").empty();
+      //
+      if( p.type=="Paragraph" ) {
+        
+        var $el = $(".paragraph-editor").clone();
+        $el.find(".btn").click(function(){
+          var newVal = $el.find("textarea").val();
+          p.text = newVal;
+          p.update();
+        });
+        $el.find("textarea").val(p.text);
+        
+      } else if( p.type=="ImageParagraph" ) {
+        
+        var $el = $(".image-paragraph-editor").clone();
+        $el.find(".btn").click(function(){
+          var text = $el.find("textarea[name=text]").val();
+          var image = $el.find("input[name=image]").val();
+          p.text = text;
+          p.image = image;
+          p.update();
+        });
+        $el.find("textarea[name=text]").val(p.text);
+        $el.find("input[name=image]").val(p.image);
+        
+      } else if( p.type=="TitleBar" ) {
+        
+        var $el = $(".titlebar-editor").clone();
+        $el.find(".btn").click(function(){
+          var title = $el.find("input[name=title]").val();
+          var color = $el.find("input[name=color]").val();
+          var background_color = $el.find("input[name=background_color]").val();
+          p.title = title;
+          p.color = color;
+          p.background_color = background_color;
+          p.update();
+        });
+        $el.find("input[name=title]").val(p.title);
+        $el.find("input[name=color]").val(p.color);
+        $el.find("input[name=background_color]").val(p.background_color);
+        
+      } else if( p.type=="Picture" ) {
+        
+        var $el = $(".picture-editor").clone();
+        $el.find(".btn").click(function(){
+          var image = $el.find("input[name=image]").val();
+          p.image = image;
+          p.update();
+        });
+        $el.find("input[name=image]").val(p.image);
+        
+      } else if( p.type=="InfoBar" ) {
+        
+        var $el = $(".infobar-editor").clone();
+        $el.find(".btn").click(function(){
+          var info = $el.find("input[name=info]").val();
+          var size = $el.find("input[name=size]").val();
+          var height = $el.find("input[name=height]").val();
+          p.info = info;
+          p.size = size;
+          p.height = height;
+          p.update();
+        });
+        $el.find("input[name=info]").val(p.info);
+        $el.find("input[name=size]").val(p.size);
+        $el.find("input[name=height]").val(p.height);
+        
+      } else if( p.type=="ImageSlider" ) {
+        
+        var $el = $(".imageslider-editor").clone();
+        $el.find(".btn").click(function(){
+          var image1 = $el.find("input[name=image1]").val();
+          var image2 = $el.find("input[name=image2]").val();
+          var image3 = $el.find("input[name=image3]").val();
+          p.images = [image1, image2, image3]
+          p.update();
+        });
+        var images = p.images;
+        $el.find("input[name=image1]").val(images[0]);
+        $el.find("input[name=image2]").val(images[1]);
+        $el.find("input[name=image3]").val(images[2]);
+        
+      } else {
+        
+        var $el = $(".other-editor").clone();
+        $el.html(p.type+": "+p.id);
+
+      }
+
+      $el.appendTo(".pop");
+      $el.css("display", "block");
+      $(".pop").css({"display": "block"});
+      $('.pop input[type=color]').spectrum();
+      
+    };
+    
+    
+    //
+    setInterval('$(".paper").height( $(".blocks").height() )', 1000);
+    
+    $(".template").draggable({ 
+      helper: "clone", 
+      opacity: 0.35,
+      revert: "invalid"
+    });
+    
+    $(".templates").css("top", $(document).scrollTop()+25);
+    $(".templates").css("left", $(".paper").offset().left-90)
+    
+    $(".pop").css("left", $(".paper").offset().left+$(".paper").width()+25);
+
+    $(document).scroll(function(e) {
+      $(".templates").css("top", $(document).scrollTop()+25);
+    });
+    
+    $("body").click(function(){
+      $(".pop").css({"display": "none"});
+    });
+    
+    $(".pop").click(function(e){
+      e.stopPropagation();
+    });
+    
+    
+  });
+  
+  </script>
+</head>
+<body>
+  <div class="templates">
+    <div class="template" template="TitleBar">
+      <img src="./images/4.png" alt="" />
+    </div>
+    <div class="template" template="RightImageParagraph">
+      <img src="./images/3.png" alt="" />
+    </div>
+    <div class="template" template="LeftImageParagraph">
+      <img src="./images/2.png" alt="" />
+    </div>
+    <div class="template" template="Paragraph">
+      <img src="./images/1.png" alt="" />
+    </div>
+    <div class="template" template="Gutter">
+      <img src="./images/5.png" alt="" />
+    </div>
+    <div class="template" template="Picture">
+      <img src="./images/6.png" alt="" />
+    </div>
+    <div class="template" template="ImageSlider">
+      <img src="./images/7.png" alt="" />
+    </div>
+    <div class="template" template="InfoBar">
+      <img src="./images/8.png" alt="" />
+    </div>
+  </div>
+
+  <div class="paper"></div>
+  
+  <div class="pop"></div>
+  
+  <div id="editors">
+    <div class="editor paragraph-editor">
+      <div class="editor-label">内容:</div>
+      <textarea name="" id="" class="ckeditor"></textarea>
+      <button class="btn">确定</button>
+    </div>
+  
+    <div class="editor titlebar-editor">
+      <div class="editor-label">标题:</div>
+      <input type="text" name="title" id="">
+      <div class="editor-label">文字颜色:</div>
+      <input type="color" name="color" id="">
+      <div class="editor-label">背景颜色:</div>
+      <input type="color" name="background_color" id=""><br>
+      <button class="btn">确定</button>
+    </div>
+  
+    <div class="editor image-paragraph-editor">
+      <div class="editor-label">内容:</div>
+      <textarea name="text" id=""></textarea>
+      <div class="editor-label">图片:</div>
+      <input type="text" name="image" id="">
+      <button class="btn">确定</button>
+    </div>
+  
+    <div class="editor picture-editor">
+      <div class="editor-label">图片:</div>
+      <input type="text" name="image" id="">
+      <button class="btn">确定</button>
+    </div>
+  
+    <div class="editor infobar-editor">
+      <div class="editor-label">信息:</div>
+      <input type="text" name="info" id="">
+      <div class="editor-label">文字大小:</div>
+      <input type="text" name="size" id="">
+      <div class="editor-label">高度:</div>
+      <input type="text" name="height" id="">
+      <button class="btn">确定</button>
+    </div>
+  
+    <div class="editor imageslider-editor">
+      <div class="editor-label">图片1:</div>
+      <input type="text" name="image1" id="">
+      <div class="editor-label">图片2:</div>
+      <input type="text" name="image2" id="">
+      <div class="editor-label">图片3:</div>
+      <input type="text" name="image3" id="">
+      <button class="btn">确定</button>
+    </div>
+  
+    <div class="editor other-editor">
+    </div>
+  </div>
+  
+  
+  
+</body>
+</html>
